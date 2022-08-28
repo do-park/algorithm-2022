@@ -1,13 +1,13 @@
 T = int(input())
 A, B, C = 0, 0, 0
 
-if T // 300:
-    A += T // 300
-    T = 300 * A
-if T // 60:
-    B += T // 60
-    T -= 60 * B
-if T // 10:
-    C += T // 10
-    T -= 10 * C
-print(f'{A} {B} {C}' if T == 0 else -1)
+if T % 10:
+    print(-1)
+else:
+    A = T // 300
+    T = T % 300
+    B = T // 60
+    T = T % 60
+    C = T // 10
+    T = T % 10
+    print(f'{A} {B} {C}')
