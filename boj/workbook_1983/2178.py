@@ -6,10 +6,10 @@ visited = [[0] * M for _ in range(N)]
 Q = deque()
 Q.append([0, 0])
 visited[0][0] = 1
+
 dx = [-1, 1, 0, 0]
 dy = [0, 0, -1, 1]
 while Q:
-    temp = deque()
     y, x = Q.popleft()
     for i in range(4):
         Y = y + dy[i]
