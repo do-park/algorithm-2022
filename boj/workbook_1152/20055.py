@@ -16,44 +16,33 @@ sys.stdin = open('20055.txt')
 # 종료되었을 때 몇 번째 단계가 진행 중이었는가
 # 가장 처음 수행되는 단계는 1단계
 
+from collections import deque
+
 N, K = map(int, input().split())
-A = list(map(int, input().split()))
-cells = [A[:N], list(reversed(A[N:]))]
-robots = [[0]*N for _ in range(2)]
-
-
-def rotate_belts(belts):
-    temp = [[0]*N for _ in range(2)]
-    temp[0][0] = belts[1][0]
-    for i in range(1, N):
-        temp[0][i] = belts[0][i - 1]
-    temp[1][N-1] = belts[0][N - 1]
-    for i in range(N-1):
-        temp[1][i] = belts[1][i + 1]
-    return temp
-
+cells = deque(map(int, input().split()))
+robots = deque([0]*N)
 
 tc = 0
 while True:
     tc += 1
-    cells, robots = rotate_belts(cells), rotate_belts(robots)
-    if robots[0][N-1]:
-        robots[0][N-1] = 0
-    for n in range(N-2, 0, -1):
-        if robots[0][n] and not robots[0][n+1] and cells[0][n+1] > 0:
-            robots[0][n], robots[0][n+1] = 0, 1
-            cells[0][n+1] -= 1
-            if cells[0][n+1] == 0:
-                K -= 1
-    if robots[0][N-1]:
-        robots[0][N-1] = 0
-    if cells[0][0] > 0:
-        robots[0][0] = 1
-        cells[0][0] -= 1
-        if cells[0][0] == 0:
-            K -= 1
-
-    if K == 0:
+    cells.rotate(1)
+    robots.rotate(1)
+    for n in range(N-1, -1, -1):
+        if robots[n]:
+            if n == N-1:
+                robots[n] = 0
+            elif not robots[n+1] and cells[n+1]:
+                robots[n], robots[n+1] = 0, 1
+                cells[n+1] -= 1
+                if n+1 == N-1:
+                    robots[n+1] = 0
+    if cells[0]:
+        robots[0] = 1
+        cells[0] -= 1
+    count = 0
+    for cell in cells:
+        if cell == 0:
+            count += 1
+    if count >= K:
         break
-
 print(tc)
